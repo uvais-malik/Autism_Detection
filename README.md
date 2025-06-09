@@ -38,7 +38,7 @@ The dataset used is a structured questionnaire-based dataset containing features
 
 ## 📁 Files
 
-* `autism_prediction.ipynb`: Google Colab notebook with complete implementation.
+* `Autism_detection_latest.ipynb`: Google Colab notebook with complete implementation.
 
 ## 🚀 Future Improvements
 
