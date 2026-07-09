@@ -27,6 +27,10 @@ answer_map = {
 
 @app.route('/')
 def index():
+    return render_template('index.html')
+
+@app.route('/assessment')
+def assessment():
     return render_template('form.html', countries=countries, ethnicities=ethnicities, relations=relations)
 
 @app.route('/predict', methods=['POST'])
@@ -65,11 +69,10 @@ def predict():
                  'age', 'gender', 'ethnicity', 'jaundice', 'austism',
                  'Country of residence', 'used_app_before', 'relation']]
 
-        # Make prediction
         prediction = model.predict(df)[0]
         result = "Autism Detected" if prediction == 1 else "No Autism Detected"
 
-        return render_template('form.html', result=result, countries=countries, ethnicities=ethnicities, relations=relations)
+        return render_template('result.html', result=result)
 
     except Exception as e:
         return f"Error: {str(e)}"

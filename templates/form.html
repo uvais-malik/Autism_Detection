@@ -1,179 +1,156 @@
+{% extends 'base.html' %}
 
+{% block title %}Assessment | NeuroDetect{% endblock %}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Austism Prediction Form</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-            margin: 40px;
-        }
-        h1 {
-            color: #333;
-        }
-        form {
-            background-color: #fff;
-            padding: 25px;
-            border-radius: 10px;
-            max-width: 600px;
-            margin: auto;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-        .field {
-            margin-bottom: 20px;
-        }
-        label {
-            font-weight: bold;
-        }
-        .result-box.red {
-            background-color: #ffcccc; /* Light red */
-            border-left: 5px solid #ff0000; /* Red border */
-            padding: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            margin-top: 20px;
-        }
+{% block content %}
+<div class="form-container">
+    <div class="form-header">
+        <h1>AQ-10 Autism Questionnaire</h1>
+        <p>Please answer the following questions as honestly as possible based on your general behaviors and preferences.</p>
+    </div>
+    
+    <form method="POST" action="/predict" class="assessment-form">
+        
+        <div class="form-section">
+            <h2 class="section-title">Behavioral Traits</h2>
+            {% set questions = [
+                "I often notice small sounds when others do not.",
+                "I usually concentrate more on the whole picture, rather than the small details.",
+                "I find it easy to do more than one thing at once.",
+                "If there is an interruption, I can switch back to what I was doing very quickly.",
+                "I find it easy to 'read between the lines' when someone is talking to me.",
+                "I know how to tell if someone listening to me is getting bored.",
+                "When I’m reading a story, I find it difficult to work out the characters’ intentions.",
+                "I like to collect information about categories of things (e.g., types of cars, birds, trains, etc).",
+                "I find it easy to work out what someone is thinking or feeling just by looking at their face.",
+                "I find it difficult to imagine what it would be like to be someone else."
+            ] %}
+            
+            <div class="questions-grid">
+                {% for i in range(1, 11) %}
+                <div class="question-card">
+                    <p class="question-text"><span>{{ i }}.</span> {{ questions[i-1] }}</p>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="A{{ i }}" value="definitely agree" required>
+                            <span class="radio-custom">Definitely Agree</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="A{{ i }}" value="slightly agree">
+                            <span class="radio-custom">Slightly Agree</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="A{{ i }}" value="slightly disagree">
+                            <span class="radio-custom">Slightly Disagree</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="A{{ i }}" value="definitely disagree">
+                            <span class="radio-custom">Definitely Disagree</span>
+                        </label>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
 
-        .result-box.green {
-            background-color: #e0ffe0; /* Light green */
-            border-left: 5px solid #4CAF50; /* Green border */
-            padding: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            margin-top: 20px;
-        }
-    </style>
-</head>
-<body>
-    <h1 align="center">Austism Prediction Form</h1>
-    <form action="/predict" method="post">
+        <div class="form-section">
+            <h2 class="section-title">Personal Information</h2>
+            <div class="input-grid">
+                
+                <div class="input-group">
+                    <label for="age">Age</label>
+                    <input type="number" id="age" name="age" min="1" max="120" placeholder="e.g. 25" required>
+                </div>
 
-        <!-- A1 to A10 Score -->
-  <div class="container">
-    <h1>AQ-10 Autism Questionnaire</h1>
-    <form method="POST" action="/predict">
-      {% set questions = [
-        "I often notice small sounds when others do not.",
-        "I usually concentrate more on the whole picture, rather than the small details.",
-        "I find it easy to do more than one thing at once.",
-        "If there is an interruption, I can switch back to what I was doing very quickly.",
-        "I find it easy to 'read between the lines' when someone is talking to me.",
-        "I know how to tell if someone listening to me is getting bored.",
-        "When I’m reading a story, I find it difficult to work out the characters’ intentions.",
-        "I like to collect information about categories of things (e.g., types of cars, birds, trains, etc).",
-        "I find it easy to work out what someone is thinking or feeling just by looking at their face.",
-        "I find it difficult to imagine what it would be like to be someone else."
-      ] %}
+                <div class="input-group">
+                    <label for="gender">Gender</label>
+                    <div class="select-wrapper">
+                        <select id="gender" name="gender" required>
+                            <option value="" disabled selected>Select Gender</option>
+                            <option value="m">Male</option>
+                            <option value="f">Female</option>
+                        </select>
+                    </div>
+                </div>
 
-      {% for i in range(1, 11) %}
-      <div class="question-block">
-        <p><strong>Question {{ i }}:</strong> {{ questions[i-1] }}</p>
-        <label><input type="radio" name="A{{ i }}" value="definitely agree" required> Definitely Agree</label><br>
-        <label><input type="radio" name="A{{ i }}" value="slightly agree"> Slightly Agree</label><br>
-        <label><input type="radio" name="A{{ i }}" value="slightly disagree"> Slightly Disagree</label><br>
-        <label><input type="radio" name="A{{ i }}" value="definitely disagree"> Definitely Disagree</label>
-      </div>
-      <hr>
-      {% endfor %}
+                <div class="input-group">
+                    <label for="ethnicity">Ethnicity</label>
+                    <div class="select-wrapper">
+                        <select id="ethnicity" name="ethnicity" required>
+                            <option value="" disabled selected>Select Ethnicity</option>
+                            {% for eth in ethnicities %}
+                            <option value="{{ eth }}">{{ eth }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
 
-      <!-- <button type="submit">Predict</button> -->
+                <div class="input-group">
+                    <label for="jaundice">Born with Jaundice?</label>
+                    <div class="select-wrapper">
+                        <select id="jaundice" name="jaundice" required>
+                            <option value="" disabled selected>Select Option</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="austism">Family Member with Autism?</label>
+                    <div class="select-wrapper">
+                        <select id="austism" name="austism" required>
+                            <option value="" disabled selected>Select Option</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="used_app_before">Used Screening App Before?</label>
+                    <div class="select-wrapper">
+                        <select id="used_app_before" name="used_app_before" required>
+                            <option value="" disabled selected>Select Option</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="Country_of_residence">Country of Residence</label>
+                    <div class="select-wrapper">
+                        <select id="Country_of_residence" name="Country of residence" required>
+                            <option value="" disabled selected>Select Country</option>
+                            {% for country in countries %}
+                            <option value="{{ country }}">{{ country }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="relation">Who is completing the test?</label>
+                    <div class="select-wrapper">
+                        <select id="relation" name="relation" required>
+                            <option value="" disabled selected>Select Relation</option>
+                            {% for relation in relations %}
+                            <option value="{{ relation }}">{{ relation }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary btn-submit">
+                Analyze Results
+                <span class="icon">🔍</span>
+            </button>
+        </div>
     </form>
-
-    {% if prediction %}
-      <div class="result">
-        <h2>Prediction Result:</h2>
-        <p>{{ prediction }}</p>
-      </div>
-    {% endif %}
- 
-
-        <!-- Age -->
-        <div class="field">
-            <label>Age:</label><br>
-            <input type="number" name="age" min="1" max="100" value="{{ request.form.get('age', '') }}" required>
-        </div>
-
-        <!-- Gender -->
-        <div class="field">
-            <label>Gender:</label><br>
-            <select name="gender" required>
-                <option value="m" {% if request.form.get('gender') == 'm' %}selected{% endif %}>Male</option>
-                <option value="f" {% if request.form.get('gender') == 'f' %}selected{% endif %}>Female</option>
-            </select>
-        </div>
-
-        <!-- Ethnicity -->
-        <div class="field">
-            <label>Ethnicity:</label><br>
-            <select name="ethnicity" required>
-                {% for eth in ethnicities %}
-                <option value="{{ eth }}" {% if request.form.get('ethnicity') == eth %}selected{% endif %}>{{ eth }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <!-- Jaundice -->
-        <div class="field">
-            <label>Born with Jaundice?</label><br>
-            <select name="jaundice" required>
-                <option value="yes" {% if request.form.get('jaundice') == 'yes' %}selected{% endif %}>Yes</option>
-                <option value="no" {% if request.form.get('jaundice') == 'no' %}selected{% endif %}>No</option>
-            </select>
-        </div>
-
-        <!-- Austism in Family -->
-        <div class="field">
-            <label>Family Member with Austism:</label><br>
-            <select name="austism" required>
-                <option value="yes" {% if request.form.get('austism') == 'yes' %}selected{% endif %}>Yes</option>
-                <option value="no" {% if request.form.get('austism') == 'no' %}selected{% endif %}>No</option>
-            </select>
-        </div>
-
-        <!-- Used App Before -->
-        <div class="field">
-            <label>Used Screening App Before:</label><br>
-            <select name="used_app_before" required>
-                <option value="yes" {% if request.form.get('used_app_before') == 'yes' %}selected{% endif %}>Yes</option>
-                <option value="no" {% if request.form.get('used_app_before') == 'no' %}selected{% endif %}>No</option>
-            </select>
-        </div>
-
-        <!-- Country of Residence -->
-        <div class="field">
-            <label>Country of Residence:</label><br>
-            <select name="Country of residence" required>
-                {% for country in countries %}
-                <option value="{{ country }}" {% if request.form.get('Country of residence') == country %}selected{% endif %}>{{ country }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <!-- Relation -->
-        <div class="field">
-            <label>Relation:</label><br>
-            <select name="relation" required>
-                {% for relation in relations %}
-                <option value="{{ relation }}" {% if request.form.get('relation') == relation %}selected{% endif %}>{{ relation }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <!-- Submit -->
-        <div class="field">
-            <button type="submit">Predict</button>
-        </div>
-
-        <!-- Prediction Result -->
-        {% if result %}
-        <div class="result-box {{ 'red' if result == 'Autism Detected' else 'green' }}">
-            Prediction: {{ result }}
-        </div>
-        {% endif %}
-
-    </form>
-     </div>
-</body>
-</html>
+</div>
+{% endblock %}

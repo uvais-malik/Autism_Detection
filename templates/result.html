@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Result | NeuroDetect{% endblock %}
+
+{% block content %}
+<div class="result-container">
+    <div class="result-card {{ 'detected' if result == 'Autism Detected' else 'clear' }}">
+        <div class="result-icon">
+            {% if result == 'Autism Detected' %}
+                ⚠️
+            {% else %}
+                ✅
+            {% endif %}
+        </div>
+        <h2>Assessment Complete</h2>
+        <p class="result-text">{{ result }}</p>
+        
+        <div class="result-disclaimer">
+            <p><strong>Please Note:</strong> This is a preliminary screening tool based on the AQ-10 questionnaire and demographic factors. It is <strong>not</strong> a medical diagnosis. If you have concerns, please consult a healthcare professional or specialist.</p>
+        </div>
+        
+        <a href="/assessment" class="btn btn-primary">Take Assessment Again</a>
+        <a href="/" class="btn btn-secondary">Return Home</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Home | NeuroDetect{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <div class="hero-content">
+        <div class="badge">AI-Powered Screening</div>
+        <h1 class="hero-title">Understanding Autism Through Advanced Insights</h1>
+        <p class="hero-subtitle">Our intelligent prediction model uses the AQ-10 framework alongside personal characteristics to provide a quick, preliminary autism screening.</p>
+        
+        <div class="hero-actions">
+            <a href="/assessment" class="btn btn-primary btn-large">
+                Start Screening Now
+                <span class="arrow">→</span>
+            </a>
+        </div>
+        
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">⏱️</div>
+                <h3>Quick & Easy</h3>
+                <p>Takes less than 5 minutes to complete the questionnaire.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>Private</h3>
+                <p>Your responses are processed instantly and not stored.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>AI Driven</h3>
+                <p>Utilizes machine learning trained on diverse screening data.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
